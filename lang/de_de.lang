@@ -1,62 +1,62 @@
-title = cntnd - Modulsammlung
-modulsammlung_general_dummy[] = Rechte für Modulsammlung-Addon
+cntnd_title = cntnd - Modulsammlung
+cntnd_general_dummy[] = Rechte für Modulsammlung-Addon
 
 
-modulsammlung_module              = Module
+cntnd_module              = Module
 
-modulsammlung_module_mform_mblock = Module mit MForm / MBlock
+cntnd_module_mform_mblock = Module mit MForm / MBlock
 
-modulsammlung_modul               = Modul
-modulsammlung_moduluebersicht     = Modulübersicht
-modulsammlung_config_fehler       = config.inc nicht vorhanden in:
-modulsammlung_info_fehler         = info.inc nicht vorhanden in:
-modulsammlung_input_fehler        = input.inc nicht vorhanden in:
-modulsammlung_output_fehler       = output.inc nicht vorhanden in:
-modulsammlung_template_fehler     = template.inc nicht vorhanden in:
+cntnd_modul               = Modul
+cntnd_moduluebersicht     = Modulübersicht
+cntnd_config_fehler       = config.inc nicht vorhanden in:
+cntnd_info_fehler         = info.inc nicht vorhanden in:
+cntnd_input_fehler        = input.inc nicht vorhanden in:
+cntnd_output_fehler       = output.inc nicht vorhanden in:
+cntnd_template_fehler     = template.inc nicht vorhanden in:
 
-modulsammlung_fertig              = Fertig
-modulsammlung_in_bearbeitung      = In Bearbeitung
-modulsammlung_entwicklung_geplant = Entwicklung geplant
-modulsammlung_input               = Input
-modulsammlung_output              = Output
-modulsammlung_acc_template        = Template
+cntnd_fertig              = Fertig
+cntnd_in_bearbeitung      = In Bearbeitung
+cntnd_entwicklung_geplant = Entwicklung geplant
+cntnd_input               = Input
+cntnd_output              = Output
+cntnd_acc_template        = Template
 
-modulsammlung_css                   = CSS
-modulsammlung_scss                  = SCSS
+cntnd_css                   = CSS
+cntnd_scss                  = SCSS
 
-modulsammlung_info                  = Info
-modulsammlung_styles                = Styles
-modulsammlung_modul_installieren    = Modul installieren
-modulsammlung_template_installieren = Template installieren
+cntnd_info                  = Info
+cntnd_styles                = Styles
+cntnd_modul_installieren    = Modul installieren
+cntnd_template_installieren = Template installieren
 
-modulsammlung_modul_angelegt        = Folgendes Modul wurde angelegt:
-modulsammlung_modulname_fehler      = Bitte einen Modulnamen angeben!
+cntnd_modul_angelegt        = Folgendes Modul wurde angelegt:
+cntnd_modulname_fehler      = Bitte einen Modulnamen angeben!
 
-modulsammlung_template_angelegt     = Folgendes Template wurde angelegt:
-modulsammlung_templatename_fehler   = Bitte einen Templatenamen angeben!
+cntnd_template_angelegt     = Folgendes Template wurde angelegt:
+cntnd_templatename_fehler   = Bitte einen Templatenamen angeben!
 
-modulsammlung_kopierter_ordner      = Folgender Ordner wurde in den Assets Ordner kopiert:
+cntnd_kopierter_ordner      = Folgender Ordner wurde in den Assets Ordner kopiert:
 
 kopierte_fragmente = Die Fragmente wurden in den Ordner "fragments" des AddOns kopiert
 
 
-modulsammlung_templates = Templates
-modulsammlung_template  = Template
-modulsammlung_templateuebersicht     = Templateübersicht
-modulsammlung_template_id            = Template ID
-modulsammlung_template_bezeichnung   = Template Bezeichnung
-modulsammlung_template_verwendung    = Verwendung
-modulsammlung_template_benutzung     = Aktuelle Templatebenutzung
+cntnd_templates = Templates
+cntnd_template  = Template
+cntnd_templateuebersicht     = Templateübersicht
+cntnd_template_id            = Template ID
+cntnd_template_bezeichnung   = Template Bezeichnung
+cntnd_template_verwendung    = Verwendung
+cntnd_template_benutzung     = Aktuelle Templatebenutzung
 
 more_examples   = Weitere Beispiele
-modulsammlung_module_more_examples   = Weitere Modul Beispiele
+cntnd_module_more_examples   = Weitere Modul Beispiele
 
-modulsammlung_changelog = Changelog
-modulsammlung_lizenz = Lizenz
+cntnd_changelog = Changelog
+cntnd_lizenz = Lizenz
 
-modulsammlung_modul_id            = Modul ID
-modulsammlung_modul_bezeichnung   = Modul Bezeichnung
-modulsammlung_modul_verwendung    = Verwendung
-modulsammlung_modul_benutzung     = Aktuelle Modulbenutzung
-modulsammlung_module_loeschen     = Unbenutze Module löschen
-modulsammlung_modul_geloescht     = Modul gelöscht: ID
+cntnd_modul_id            = Modul ID
+cntnd_modul_bezeichnung   = Modul Bezeichnung
+cntnd_modul_verwendung    = Verwendung
+cntnd_modul_benutzung     = Aktuelle Modulbenutzung
+cntnd_module_loeschen     = Unbenutze Module löschen
+cntnd_modul_geloescht     = Modul gelöscht: ID

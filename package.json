@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "del": "^5.1.0",
+    "gulp": "^5.0.0",
+    "gulp-file": "^0.4.0",
+    "gulp-minifier": "^2.0.0"
+  },
+  "author": "Thomas D Ascoli, thomas@dasco.li",
+  "dependencies": {
+    "gulp-cli": "^3.0.0"
+  }
+}

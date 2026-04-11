@@ -1,0 +1,19 @@
+name: Publish addon to REDAXO
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish to MyREDAXO
+        uses: FriendsOfREDAXO/installer-action@v1
+        with:
+          myredaxo-username: ${{ secrets.MYREDAXO_USERNAME }}
+          myredaxo-api-key: ${{ secrets.MYREDAXO_API_KEY }}
+          version: ${{ github.event.release.tag_name }}
+          description: ${{ github.event.release.body }}

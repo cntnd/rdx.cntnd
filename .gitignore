@@ -1,1 +1,4 @@
 /.idea/
+/package-lock.json
+/addon/
+/node_modules/

@@ -1,0 +1,29 @@
+.asset-editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.asset-editor-filename {
+    font-family: monospace;
+}
+
+.asset-editor-wrap {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+}
+
+.asset-editor-ace {
+    width: 100%;
+    height: 560px;
+    font-size: 13px;
+}
+
+.asset-editor-base-list li {
+    padding: 6px 0;
+}
+
+.asset-editor-base-list i.rex-icon {
+    margin-right: 6px;
+}

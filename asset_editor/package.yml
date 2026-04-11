@@ -1,0 +1,24 @@
+package: asset_editor
+version: '1.0.0'
+author: 'Thomas D''Ascoli'
+supportpage: https://github.com/tdascoli/asset_editor
+
+requires:
+    redaxo: '^5.18'
+    php:
+        version: '^8.1'
+
+page:
+    title: translate:asset_editor_title
+    icon: rex-icon fa-code
+    perm: asset_editor[]
+    subpages:
+        editor:
+            title: translate:asset_editor_editor_title
+            icon: rex-icon fa-file-code-o
+        settings:
+            title: translate:asset_editor_settings_title
+            icon: rex-icon fa-cog
+
+default_config:
+    base_paths: []

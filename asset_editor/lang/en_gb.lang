@@ -1,0 +1,24 @@
+asset_editor_title = Asset editor
+navigation_asset_editor = Asset editor
+
+perm_general_asset_editor[] = Use asset editor
+
+asset_editor_editor_title = Editor
+asset_editor_settings_title = Settings
+asset_editor_settings_saved = Settings saved.
+
+asset_editor_select_folder = Select folder
+asset_editor_base_paths_label = Allowed base paths
+asset_editor_base_paths_help = One entry per line, format "Label|absolute path". Only files below these paths can be edited.
+
+asset_editor_save = Save
+asset_editor_saved = File saved.
+asset_editor_write_error = Could not write file.
+asset_editor_path_denied = Path not allowed.
+asset_editor_file_not_editable = File is not editable (only .css and .js allowed).
+asset_editor_no_base_paths_configured = No base paths configured yet.
+asset_editor_back = Back
+asset_editor_back_to_bases = Back to base selection
+asset_editor_folder = Folder
+asset_editor_name = Name
+asset_editor_type = Type

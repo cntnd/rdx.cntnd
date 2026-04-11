@@ -9,7 +9,8 @@ asset_editor_settings_saved = Einstellungen gespeichert.
 
 asset_editor_select_folder = Ordner auswählen
 asset_editor_base_paths_label = Erlaubte Basis-Pfade
-asset_editor_base_paths_help = Ein Eintrag pro Zeile im Format "Label|absoluter Pfad". Nur Dateien unterhalb dieser Pfade können bearbeitet werden.
+asset_editor_base_paths_help = Ein Eintrag pro Zeile im Format "Label|pfad", wobei "pfad" relativ zum Assets-Root ist: {0}. Beispiele: "CSS|css", "JS|js", "Theme|theme/css". Leerer Pfad = Assets-Root selbst.
+asset_editor_assets_root_missing = Der Assets-Ordner existiert nicht: {0}
 
 asset_editor_save = Speichern
 asset_editor_saved = Datei gespeichert.

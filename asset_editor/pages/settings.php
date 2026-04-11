@@ -3,6 +3,12 @@
 $addon = rex_addon::get('asset_editor');
 $csrf = rex_csrf_token::factory('asset_editor_settings');
 
+$assetsRoot = asset_editor_path::getAssetsRoot();
+if ($assetsRoot === null) {
+    echo rex_view::error(rex_i18n::msg('asset_editor_assets_root_missing', rex_path::assets()));
+    return;
+}
+
 if (rex_post('save', 'bool') && $csrf->isValid()) {
     $raw = rex_post('base_paths', 'string', '');
     $lines = preg_split('/\r?\n/', $raw) ?: [];
@@ -18,17 +24,28 @@ if (rex_post('save', 'bool') && $csrf->isValid()) {
             $errors[] = sprintf('Line %d: missing "|" separator.', $lineNr + 1);
             continue;
         }
-        [$label, $path] = array_map('trim', explode('|', $line, 2));
-        if ($label === '' || $path === '') {
-            $errors[] = sprintf('Line %d: label and path required.', $lineNr + 1);
+        [$label, $relative] = array_map('trim', explode('|', $line, 2));
+        if ($label === '') {
+            $errors[] = sprintf('Line %d: label required.', $lineNr + 1);
             continue;
         }
-        $real = realpath($path);
+
+        // Normalize: strip leading slashes, convert backslashes. Empty relative
+        // means "assets root itself".
+        $relative = ltrim(str_replace('\\', '/', $relative), '/');
+
+        $combined = $relative === '' ? $assetsRoot : $assetsRoot . DIRECTORY_SEPARATOR . $relative;
+        $real = realpath($combined);
         if ($real === false || !is_dir($real)) {
-            $errors[] = sprintf('Line %d: path does not exist: %s', $lineNr + 1, $path);
+            $errors[] = sprintf('Line %d: path does not exist under assets/: %s', $lineNr + 1, $relative);
             continue;
         }
-        $result[] = ['label' => $label, 'path' => $real];
+        if ($real !== $assetsRoot && !str_starts_with($real, $assetsRoot . DIRECTORY_SEPARATOR)) {
+            $errors[] = sprintf('Line %d: path escapes the assets root: %s', $lineNr + 1, $relative);
+            continue;
+        }
+
+        $result[] = ['label' => $label, 'relative' => $relative];
     }
 
     if ($errors === []) {
@@ -43,8 +60,8 @@ $configured = $addon->getConfig('base_paths', []);
 $textareaValue = '';
 if (is_array($configured)) {
     foreach ($configured as $entry) {
-        if (is_array($entry) && isset($entry['label'], $entry['path'])) {
-            $textareaValue .= $entry['label'] . '|' . $entry['path'] . "\n";
+        if (is_array($entry) && isset($entry['label'], $entry['relative'])) {
+            $textareaValue .= $entry['label'] . '|' . $entry['relative'] . "\n";
         }
     }
 }
@@ -55,7 +72,7 @@ $body = '
     <div class="form-group">
         <label for="asset-editor-base-paths">' . rex_i18n::msg('asset_editor_base_paths_label') . '</label>
         <textarea id="asset-editor-base-paths" name="base_paths" rows="8" class="form-control">' . rex_escape($textareaValue) . '</textarea>
-        <p class="help-block">' . rex_i18n::msg('asset_editor_base_paths_help') . '</p>
+        <p class="help-block">' . rex_i18n::msg('asset_editor_base_paths_help', rex_escape($assetsRoot)) . '</p>
     </div>
     <button type="submit" name="save" value="1" class="btn btn-save">' . rex_i18n::msg('asset_editor_save') . '</button>
 </form>

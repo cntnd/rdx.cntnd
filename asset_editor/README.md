@@ -21,27 +21,33 @@ REDAXO backend under *System → AddOns*.
 
 ## Configuration
 
-Go to **Asset-Editor → Einstellungen** and add one or more base paths, one per
-line, in the format:
+All editable content lives under the public REDAXO `assets/` directory
+(`rex_path::assets()`). Go to **Asset-Editor → Einstellungen** and add one or
+more base paths, one per line, in the format:
 
 ```
-My CSS|/var/www/html/assets/css
-My JS|/var/www/html/assets/js
+CSS|css
+JS|js
+Theme CSS|theme/css
 ```
 
-The label is what the editor sees; the absolute path is validated with
-`realpath()` and must exist. Paths that don't resolve are dropped with an
-error message.
+The left side is the label shown in the browser, the right side is a path
+**relative to the assets root**. An empty path means the assets root itself.
+Paths that don't exist or that would escape the assets root are rejected
+with an error message.
 
 ## Security notes
 
-- Every user-supplied path is resolved and compared against the configured
-  base paths. `..` segments are collapsed before the comparison, so
-  `foo/../../etc/passwd` cannot escape.
+- Base paths are stored relative to `rex_path::assets()` and resolved with
+  `realpath()` at read time. Any entry whose resolved path leaves the assets
+  root is discarded, so the addon can never edit files outside `assets/`.
+- Within a base, user-supplied relative paths are normalized (`.` / `..`
+  collapsed) and required to stay inside the base. `foo/../../etc/passwd`
+  cannot escape.
 - File writes use `file_put_contents` — make sure the PHP process has write
   access to the configured directories.
-- Symlinks *inside* a base that point outside the base are not followed
-  defensively. Only configure base paths you control.
+- Symlinks *inside* a base that point outside the assets root are not
+  followed defensively. Only configure base paths you control.
 - Forms use `rex_csrf_token`; mutations require a valid token.
 
 ## Ace editor

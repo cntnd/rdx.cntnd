@@ -3,12 +3,11 @@
 /**
  * Path security helper for the asset_editor addon.
  *
- * Every user-supplied path (relative, coming from GET/POST) is resolved against
- * one of the configured base paths. The base paths themselves are stored
- * already-realpath'd in the addon config, and this class refuses any relative
- * path that, once normalized, would leave the base directory. Directory
- * traversal via ".." is handled by the normalizer, not by realpath() — so files
- * that do not yet exist can still be validated.
+ * All editable content lives under the public REDAXO assets root
+ * (`rex_path::assets()`). Configured base paths are stored relative to that
+ * root and resolved at read time; any stored entry whose resolved path would
+ * leave the assets root is discarded. Within a base, a second layer of
+ * validation normalizes "." / ".." segments to block traversal.
  *
  * Only .css and .js files are considered editable. Everything else is rejected
  * at the type check, regardless of where it lives.
@@ -18,10 +17,28 @@ class asset_editor_path
     public const ALLOWED_EXTENSIONS = ['css', 'js'];
 
     /**
-     * @return array<int, array{label: string, path: string}>
+     * Absolute, realpath'd assets root under which every base path must live.
+     * Returns null if the assets directory does not exist on disk.
+     */
+    public static function getAssetsRoot(): ?string
+    {
+        $root = realpath(rex_path::assets());
+        if ($root === false || !is_dir($root)) {
+            return null;
+        }
+        return $root;
+    }
+
+    /**
+     * @return array<int, array{label: string, relative: string, path: string}>
      */
     public static function getBasePaths(): array
     {
+        $root = self::getAssetsRoot();
+        if ($root === null) {
+            return [];
+        }
+
         $raw = rex_addon::get('asset_editor')->getConfig('base_paths', []);
         if (!is_array($raw)) {
             return [];
@@ -29,15 +46,20 @@ class asset_editor_path
 
         $result = [];
         foreach ($raw as $entry) {
-            if (!is_array($entry) || !isset($entry['path'])) {
+            if (!is_array($entry) || !isset($entry['relative'])) {
                 continue;
             }
-            $real = realpath((string) $entry['path']);
+            $relative = (string) $entry['relative'];
+            $combined = $relative === '' ? $root : $root . DIRECTORY_SEPARATOR . ltrim(str_replace('\\', '/', $relative), '/');
+            $real = realpath($combined);
             if ($real === false || !is_dir($real)) {
                 continue;
             }
-            $label = isset($entry['label']) && $entry['label'] !== '' ? (string) $entry['label'] : basename($real);
-            $result[] = ['label' => $label, 'path' => $real];
+            if ($real !== $root && !str_starts_with($real, $root . DIRECTORY_SEPARATOR)) {
+                continue;
+            }
+            $label = isset($entry['label']) && $entry['label'] !== '' ? (string) $entry['label'] : ($relative === '' ? basename($root) : $relative);
+            $result[] = ['label' => $label, 'relative' => $relative, 'path' => $real];
         }
         return $result;
     }

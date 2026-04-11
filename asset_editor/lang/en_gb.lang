@@ -9,7 +9,8 @@ asset_editor_settings_saved = Settings saved.
 
 asset_editor_select_folder = Select folder
 asset_editor_base_paths_label = Allowed base paths
-asset_editor_base_paths_help = One entry per line, format "Label|absolute path". Only files below these paths can be edited.
+asset_editor_base_paths_help = One entry per line, format "Label|path", where "path" is relative to the assets root: {0}. Examples: "CSS|css", "JS|js", "Theme|theme/css". Empty path = assets root itself.
+asset_editor_assets_root_missing = Assets directory does not exist: {0}
 
 asset_editor_save = Save
 asset_editor_saved = File saved.

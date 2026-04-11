@@ -2,6 +2,11 @@
 
 $addon = rex_addon::get('asset_editor');
 
+if (asset_editor_path::getAssetsRoot() === null) {
+    echo rex_view::error(rex_i18n::msg('asset_editor_assets_root_missing', rex_path::assets()));
+    return;
+}
+
 $bases = asset_editor_path::getBasePaths();
 
 if ($bases === []) {
@@ -47,10 +52,11 @@ if ($baseIndex < 0 || !isset($bases[$baseIndex])) {
     $items = '';
     foreach ($bases as $i => $entry) {
         $url = rex_url::currentBackendPage(['base' => $i]);
+        $relativeLabel = $entry['relative'] === '' ? 'assets/' : 'assets/' . $entry['relative'];
         $items .= '<li><a href="' . rex_escape($url) . '">'
             . '<i class="rex-icon fa-folder-open"></i> '
             . rex_escape($entry['label'])
-            . ' <small class="text-muted">' . rex_escape($entry['path']) . '</small>'
+            . ' <small class="text-muted">' . rex_escape($relativeLabel) . '</small>'
             . '</a></li>';
     }
 

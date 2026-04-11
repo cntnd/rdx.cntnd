@@ -53,7 +53,7 @@ if ($baseIndex < 0 || !isset($bases[$baseIndex])) {
     foreach ($bases as $i => $entry) {
         $url = rex_url::currentBackendPage(['base' => $i]);
         $relativeLabel = $entry['relative'] === '' ? 'assets/' : 'assets/' . $entry['relative'];
-        $items .= '<li><a href="' . rex_escape($url) . '">'
+        $items .= '<li><a href="' . $url . '">'
             . '<i class="rex-icon fa-folder-open"></i> '
             . rex_escape($entry['label'])
             . ' <small class="text-muted">' . rex_escape($relativeLabel) . '</small>'
@@ -90,13 +90,13 @@ if ($relFile !== '') {
     <input type="hidden" name="base" value="' . rex_escape((string) $baseIndex, 'html_attr') . '">
     <input type="hidden" name="file" value="' . rex_escape($relFile, 'html_attr') . '">
     <div class="asset-editor-toolbar">
-        <a href="' . rex_escape($backUrl) . '" class="btn btn-default">
+        <a href="' . $backUrl . '" class="btn btn-default">
             <i class="rex-icon fa-arrow-left"></i> ' . rex_i18n::msg('asset_editor_back') . '
         </a>
         <strong class="asset-editor-filename">' . rex_escape($relFile) . '</strong>
     </div>
     <div class="asset-editor-wrap" data-ace-mode="' . rex_escape($mode, 'html_attr') . '">
-        <textarea class="js-ace-editor form-control" name="content" rows="20">' . rex_escape($fileContent) . '</textarea>
+        <textarea class="aceeditor aceeditor-css form-control" name="content" rows="20">' . rex_escape($fileContent) . '</textarea>
     </div>
     <button type="submit" name="save" value="1" class="btn btn-save">' . rex_i18n::msg('asset_editor_save') . '</button>
 </form>
@@ -125,17 +125,17 @@ if ($relDir !== '') {
     $parent = dirname($relDir);
     $parentRel = ($parent === '.') ? '' : $parent;
     $upUrl = rex_url::currentBackendPage(['base' => $baseIndex, 'path' => $parentRel]);
-    $rows .= '<tr><td><a href="' . rex_escape($upUrl) . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td></td></tr>';
+    $rows .= '<tr><td><a href="' . $upUrl . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td></td></tr>';
 } else {
     $upUrl = rex_url::currentBackendPage();
-    $rows .= '<tr><td><a href="' . rex_escape($upUrl) . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td>' . rex_i18n::msg('asset_editor_back_to_bases') . '</td></tr>';
+    $rows .= '<tr><td><a href="' . $upUrl . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td>' . rex_i18n::msg('asset_editor_back_to_bases') . '</td></tr>';
 }
 
 foreach ($listing['dirs'] as $dir) {
     $childRel = $relDir === '' ? $dir : $relDir . '/' . $dir;
     $url = rex_url::currentBackendPage(['base' => $baseIndex, 'path' => $childRel]);
     $rows .= '<tr>'
-        . '<td><a href="' . rex_escape($url) . '"><i class="rex-icon fa-folder"></i> ' . rex_escape($dir) . '</a></td>'
+        . '<td><a href="' . $url . '"><i class="rex-icon fa-folder"></i> ' . rex_escape($dir) . '</a></td>'
         . '<td>' . rex_i18n::msg('asset_editor_folder') . '</td>'
         . '</tr>';
 }
@@ -146,14 +146,14 @@ foreach ($listing['files'] as $file) {
     $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
     $icon = $ext === 'css' ? 'fa-file-code-o' : 'fa-file-text-o';
     $rows .= '<tr>'
-        . '<td><a href="' . rex_escape($url) . '"><i class="rex-icon ' . $icon . '"></i> ' . rex_escape($file) . '</a></td>'
+        . '<td><a href="' . $url . '"><i class="rex-icon ' . $icon . '"></i> ' . rex_escape($file) . '</a></td>'
         . '<td>' . strtoupper($ext) . '</td>'
         . '</tr>';
 }
 
 $heading = rex_escape($bases[$baseIndex]['label']);
 if ($relDir !== '') {
-    $heading .= ' / ' . rex_escape($relDir);
+    $heading .= ' / ' . $relDir;
 }
 
 $body = '

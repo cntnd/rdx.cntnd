@@ -96,7 +96,7 @@ if ($relFile !== '') {
         <strong class="asset-editor-filename">' . rex_escape($relFile) . '</strong>
     </div>
     <div class="asset-editor-wrap" data-ace-mode="' . rex_escape($mode, 'html_attr') . '">
-        <textarea class="aceeditor aceeditor-css form-control" name="content" rows="20">' . rex_escape($fileContent) . '</textarea>
+        <textarea class="aceeditor form-control" name="content" rows="20">' . rex_escape($fileContent) . '</textarea>
     </div>
     <button type="submit" name="save" value="1" class="btn btn-save">' . rex_i18n::msg('asset_editor_save') . '</button>
 </form>

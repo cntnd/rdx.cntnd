@@ -21,5 +21,6 @@ asset_editor_no_base_paths_configured = No base paths configured yet.
 asset_editor_back = Back
 asset_editor_back_to_bases = Back to base selection
 asset_editor_folder = Folder
+asset_editor_folder_empty = This folder contains no editable files (.css, .js) and no subdirectories.
 asset_editor_name = Name
 asset_editor_type = Type

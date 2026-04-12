@@ -1,6 +1,7 @@
 <?php
 
 $addon = rex_addon::get('asset_editor');
+rex_autoload::addDirectory($addon->getPath('lib'));
 
 if (rex::isBackend() && is_object(rex::getUser())) {
     rex_perm::register('asset_editor[]', rex_i18n::msg('perm_general_asset_editor[]'));

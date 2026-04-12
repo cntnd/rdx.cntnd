@@ -156,7 +156,16 @@ if ($relDir !== '') {
     $heading .= ' / ' . $relDir;
 }
 
-$body = '
+if ($listing['dirs'] === [] && $listing['files'] === []) {
+    $body = '<p class="text-muted">' . rex_i18n::msg('asset_editor_folder_empty') . '</p>';
+    if ($relDir !== '') {
+        $body = '<p><a href="' . rex_escape($upUrl) . '"><i class="rex-icon fa-arrow-left"></i> ' . rex_i18n::msg('asset_editor_back') . '</a></p>' . $body;
+    } else {
+        $backToBasesUrl = rex_url::currentBackendPage();
+        $body = '<p><a href="' . rex_escape($backToBasesUrl) . '"><i class="rex-icon fa-arrow-left"></i> ' . rex_i18n::msg('asset_editor_back_to_bases') . '</a></p>' . $body;
+    }
+} else {
+    $body = '
 <table class="table table-hover">
     <thead>
         <tr>
@@ -167,6 +176,7 @@ $body = '
     <tbody>' . $rows . '</tbody>
 </table>
 ';
+}
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $heading, false);

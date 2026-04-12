@@ -16,9 +16,11 @@ page:
         editor:
             title: translate:asset_editor_editor_title
             icon: rex-icon fa-file-code-o
+            default: true
         settings:
             title: translate:asset_editor_settings_title
             icon: rex-icon fa-cog
+            perm: admin
 
 default_config:
     base_paths: []

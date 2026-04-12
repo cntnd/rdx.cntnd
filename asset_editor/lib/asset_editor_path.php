@@ -134,7 +134,16 @@ class asset_editor_path
         if (!is_file($absolutePath)) {
             return false;
         }
-        $ext = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
+        return self::hasEditableExtension($absolutePath);
+    }
+
+    /**
+     * Check extension only — does not require the file to exist on disk.
+     * Use for validating new filenames before creation.
+     */
+    public static function hasEditableExtension(string $path): bool
+    {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         return in_array($ext, self::ALLOWED_EXTENSIONS, true);
     }
 

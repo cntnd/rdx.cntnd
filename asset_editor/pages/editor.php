@@ -30,9 +30,13 @@ if (rex_post('save', 'bool') && $csrf->isValid()) {
     $postContent = rex_post('content', 'string', '');
 
     $absolute = asset_editor_path::resolve($postBase, $postFile);
-    if ($absolute === null || !asset_editor_path::isEditableFile($absolute)) {
+    if ($absolute === null || !asset_editor_path::hasEditableExtension($postFile)) {
         echo rex_view::error(rex_i18n::msg('asset_editor_path_denied'));
     } else {
+        $dir = dirname($absolute);
+        if (!is_dir($dir)) {
+            rex_dir::create($dir);
+        }
         $bytes = @file_put_contents($absolute, $postContent);
         if ($bytes === false) {
             echo rex_view::error(rex_i18n::msg('asset_editor_write_error'));
@@ -43,6 +47,41 @@ if (rex_post('save', 'bool') && $csrf->isValid()) {
         $relFile = $postFile;
         $parent = dirname($postFile);
         $relDir = ($parent === '.' || $parent === '') ? '' : $parent;
+    }
+}
+
+// --- Create new file --------------------------------------------------------
+
+if (rex_post('create_file', 'bool') && $csrf->isValid()) {
+    $postBase = rex_post('base', 'int', -1);
+    $postDir = rex_post('current_dir', 'string', '');
+    $newName = rex_post('new_filename', 'string', '');
+    $newName = trim(basename($newName));
+
+    if ($newName === '' || !asset_editor_path::hasEditableExtension($newName)) {
+        echo rex_view::error(rex_i18n::msg('asset_editor_invalid_filename'));
+    } else {
+        $newRel = $postDir === '' ? $newName : $postDir . '/' . $newName;
+        $absolute = asset_editor_path::resolve($postBase, $newRel);
+        if ($absolute === null) {
+            echo rex_view::error(rex_i18n::msg('asset_editor_path_denied'));
+        } elseif (is_file($absolute)) {
+            echo rex_view::error(rex_i18n::msg('asset_editor_file_exists'));
+        } else {
+            $dir = dirname($absolute);
+            if (!is_dir($dir)) {
+                rex_dir::create($dir);
+            }
+            $bytes = @file_put_contents($absolute, '');
+            if ($bytes === false) {
+                echo rex_view::error(rex_i18n::msg('asset_editor_write_error'));
+            } else {
+                echo rex_view::success(rex_i18n::msg('asset_editor_file_created', $newName));
+                $baseIndex = $postBase;
+                $relFile = $newRel;
+                $relDir = $postDir;
+            }
+        }
     }
 }
 
@@ -182,3 +221,24 @@ $fragment = new rex_fragment();
 $fragment->setVar('title', $heading, false);
 $fragment->setVar('body', $body, false);
 echo $fragment->parse('core/page/section.php');
+
+// --- New file form ----------------------------------------------------------
+
+$newFileBody = '
+<form action="' . rex_url::currentBackendPage() . '" method="post" class="form-inline">
+    ' . $csrf->getHiddenField() . '
+    <input type="hidden" name="base" value="' . rex_escape((string) $baseIndex, 'html_attr') . '">
+    <input type="hidden" name="current_dir" value="' . rex_escape($relDir, 'html_attr') . '">
+    <div class="form-group" style="margin-right:10px;">
+        <input type="text" name="new_filename" class="form-control" placeholder="' . rex_i18n::msg('asset_editor_new_file_placeholder') . '" required>
+    </div>
+    <button type="submit" name="create_file" value="1" class="btn btn-save">
+        <i class="rex-icon fa-plus"></i> ' . rex_i18n::msg('asset_editor_create_file') . '
+    </button>
+</form>
+';
+
+$newFileFragment = new rex_fragment();
+$newFileFragment->setVar('title', rex_i18n::msg('asset_editor_new_file'), false);
+$newFileFragment->setVar('body', $newFileBody, false);
+echo $newFileFragment->parse('core/page/section.php');

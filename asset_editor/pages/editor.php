@@ -157,7 +157,7 @@ if ($relFile !== '') {
         </a>
         <strong class="asset-editor-filename">' . rex_escape($relFile) . '</strong>
         <a href="' . rex_url::currentBackendPage(array_merge(['base' => $baseIndex, 'delete_file' => $relFile], $csrfDelete->getUrlParams())) . '"
-           class="btn btn-delete" onclick="return confirm(\'' . rex_escape(rex_i18n::msg('asset_editor_delete_confirm', basename($relFile)), 'js') . '\')">
+           class="btn btn-delete" onclick="return confirm(\'' . rex_i18n::msg('asset_editor_delete_confirm', basename($relFile)) . '\')">
             <i class="rex-icon fa-trash"></i> ' . rex_i18n::msg('asset_editor_delete') . '
         </a>
     </div>

@@ -21,6 +21,29 @@ $baseIndex = rex_request('base', 'int', -1);
 $relDir = rex_request('path', 'string', '');
 $relFile = rex_request('file', 'string', '');
 $csrf = rex_csrf_token::factory('asset_editor_save');
+$csrfDelete = rex_csrf_token::factory('asset_editor_delete');
+
+// --- Delete handling --------------------------------------------------------
+
+if (rex_request('delete_file', 'string', '') !== '' && $csrfDelete->isValid()) {
+    $delBase = rex_request('base', 'int', -1);
+    $delFile = rex_request('delete_file', 'string', '');
+
+    $absolute = asset_editor_path::resolve($delBase, $delFile);
+    if ($absolute === null || !asset_editor_path::isEditableFile($absolute)) {
+        echo rex_view::error(rex_i18n::msg('asset_editor_path_denied'));
+    } else {
+        if (@unlink($absolute)) {
+            echo rex_view::success(rex_i18n::msg('asset_editor_file_deleted', basename($delFile)));
+            $baseIndex = $delBase;
+            $relFile = '';
+            $parent = dirname($delFile);
+            $relDir = ($parent === '.' || $parent === '') ? '' : $parent;
+        } else {
+            echo rex_view::error(rex_i18n::msg('asset_editor_delete_error'));
+        }
+    }
+}
 
 // --- Save handling ----------------------------------------------------------
 
@@ -133,6 +156,10 @@ if ($relFile !== '') {
             <i class="rex-icon fa-arrow-left"></i> ' . rex_i18n::msg('asset_editor_back') . '
         </a>
         <strong class="asset-editor-filename">' . rex_escape($relFile) . '</strong>
+        <a href="' . rex_url::currentBackendPage(array_merge(['base' => $baseIndex, 'delete_file' => $relFile], $csrfDelete->getUrlParams())) . '"
+           class="btn btn-delete" onclick="return confirm(\'' . rex_escape(rex_i18n::msg('asset_editor_delete_confirm', basename($relFile)), 'js') . '\')">
+            <i class="rex-icon fa-trash"></i> ' . rex_i18n::msg('asset_editor_delete') . '
+        </a>
     </div>
     <div class="asset-editor-wrap" data-ace-mode="' . rex_escape($mode, 'html_attr') . '">
         <textarea class="aceeditor form-control" name="content" rows="20">' . rex_escape($fileContent) . '</textarea>
@@ -164,10 +191,10 @@ if ($relDir !== '') {
     $parent = dirname($relDir);
     $parentRel = ($parent === '.') ? '' : $parent;
     $upUrl = rex_url::currentBackendPage(['base' => $baseIndex, 'path' => $parentRel]);
-    $rows .= '<tr><td><a href="' . $upUrl . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td></td></tr>';
+    $rows .= '<tr><td><a href="' . $upUrl . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td></td><td></td></tr>';
 } else {
     $upUrl = rex_url::currentBackendPage();
-    $rows .= '<tr><td><a href="' . $upUrl . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td>' . rex_i18n::msg('asset_editor_back_to_bases') . '</td></tr>';
+    $rows .= '<tr><td><a href="' . $upUrl . '"><i class="rex-icon fa-level-up"></i> ..</a></td><td>' . rex_i18n::msg('asset_editor_back_to_bases') . '</td><td></td></tr>';
 }
 
 foreach ($listing['dirs'] as $dir) {
@@ -176,17 +203,20 @@ foreach ($listing['dirs'] as $dir) {
     $rows .= '<tr>'
         . '<td><a href="' . $url . '"><i class="rex-icon fa-folder"></i> ' . rex_escape($dir) . '</a></td>'
         . '<td>' . rex_i18n::msg('asset_editor_folder') . '</td>'
+        . '<td></td>'
         . '</tr>';
 }
 
 foreach ($listing['files'] as $file) {
     $childRel = $relDir === '' ? $file : $relDir . '/' . $file;
     $url = rex_url::currentBackendPage(['base' => $baseIndex, 'file' => $childRel]);
+    $deleteUrl = rex_url::currentBackendPage(array_merge(['base' => $baseIndex, 'path' => $relDir, 'delete_file' => $childRel], $csrfDelete->getUrlParams()));
     $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
     $icon = $ext === 'css' ? 'fa-file-code-o' : 'fa-file-text-o';
     $rows .= '<tr>'
         . '<td><a href="' . $url . '"><i class="rex-icon ' . $icon . '"></i> ' . rex_escape($file) . '</a></td>'
         . '<td>' . strtoupper($ext) . '</td>'
+        . '<td class="rex-table-action"><a href="' . $deleteUrl . '" onclick="return confirm(\'' . rex_escape(rex_i18n::msg('asset_editor_delete_confirm', $file), 'js') . '\')" title="' . rex_i18n::msg('asset_editor_delete') . '"><i class="rex-icon fa-trash"></i></a></td>'
         . '</tr>';
 }
 
@@ -210,6 +240,7 @@ if ($listing['dirs'] === [] && $listing['files'] === []) {
         <tr>
             <th>' . rex_i18n::msg('asset_editor_name') . '</th>
             <th>' . rex_i18n::msg('asset_editor_type') . '</th>
+            <th class="rex-table-action"></th>
         </tr>
     </thead>
     <tbody>' . $rows . '</tbody>
